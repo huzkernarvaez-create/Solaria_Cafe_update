@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Solaria — Order Now</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+      --gold: #d4af37;
+      --gold-strong: #c79e2d;
+      --gold-light: #f4e4b0;
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --muted: #bfbfbf;
+      --cream: #f5f5dc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1410 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* Hero Section with Logo */
+    .hero {
+      background: linear-gradient(180deg, rgba(212,175,55,0.08) 0%, transparent 100%);
+      padding: 24px 18px 32px;
+      text-align: center;
+      border-bottom: 2px solid rgba(212,175,55,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .logo-container {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+      border-radius: 50%;
+      box-shadow: 0 8px 32px rgba(212,175,55,0.3);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cafe-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 12px 0 8px;
+      text-shadow: 0 2px 12px rgba(212,175,55,0.4);
+      letter-spacing: 2px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cafe-subtitle {
+      color: var(--gold-light);
+      font-size: 0.95rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      position: relative;
+      z-index: 2;
+    }
+
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 18px;
+    }
+
+    /* Menu Design */
+    .menu-section {
+      background: linear-gradient(145deg, rgba(26,26,26,0.9), rgba(20,20,20,0.9));
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 16px;
+      padding: 0;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .menu-header {
+      background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+      padding: 18px 20px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--gold);
+      font-size: 1.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(212,175,55,0.1);
+    }
+
+    .menu-header:hover {
+      background: linear-gradient(90deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
+    }
+
+    .menu-icon {
+      transition: transform 0.3s ease;
+      font-size: 1.2rem;
+    }
+
+    .menu-content {
+      padding: 20px;
+    }
+
+    .menu-subgroup { 
+      margin-bottom: 24px;
+    }
+
+    .menu-subgroup:last-child {
+      margin-bottom: 0;
+    }
+
+    .subgroup-title {
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(212,175,55,0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subgroup-title::before {
+      content: '☕';
+      font-size: 1.2rem;
+    }
+
+    .items-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .menu-item {
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212,175,55,0.4);
+      box-shadow: 0 8px 24px rgba(212,175,55,0.15);
+    }
+
+    .menu-item:hover::before {
+      opacity: 1;
+    }
+
+    .menu-item h4 { 
+      color: #fff; 
+      font-weight: 600; 
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      line-height: 1.3;
+      min-height: 38px;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(212,175,55,0.2);
+      background: rgba(10,10,10,0.5);
+      color: white;
+      text-align: center;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(10,10,10,0.8);
+    }
+
+    .btn-add {
+      background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+      color: #0b0b0b;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+    }
+
+    .btn-add:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.5);
+    }
+
+    .btn-add:active {
+      transform: scale(0.98);
+    }
+
+    /* Fixed Order Bar */
+    #order-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(10,10,10,0.95), rgba(10,10,10,0.98));
+      border-top: 2px solid rgba(212,175,55,0.3);
+      padding: 16px;
+      z-index: 50;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.8);
+      backdrop-filter: blur(20px);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+    }
+
+    .order-title {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
+    .order-count {
+      background: var(--gold);
+      color: black;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    #order-list {
+      overflow-y: auto;
+      max-height: 25vh;
+      padding-right: 8px;
+      margin-bottom: 12px;
+    }
+
+    #order-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #order-list::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+
+    #order-list::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 10px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: rgba(26,26,26,0.8);
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .order-item:hover {
+      background: rgba(26,26,26,1);
+      border-color: rgba(212,175,55,0.3);
+    }
+
+    .order-item-info {
+      flex: 1;
+    }
+
+    .order-item-name {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 2px;
+    }
+
+    .order-item-price {
+      font-size: 0.85rem;
+      color: var(--gold-light);
+    }
+
+    .order-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .order-item input {
+      width: 60px;
+      background: rgba(10,10,10,0.8);
+      border: 1px solid rgba(212,175,55,0.2);
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 6px;
+      font-weight: 600;
+    }
+
+    .btn-remove {
+      background: #c72c2c;
+      color: white;
+      border-radius: 6px;
+      padding: 6px 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .btn-remove:hover {
+      background: #e14d4d;
+      transform: scale(1.1);
+    }
+
+    .bottom-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 2px solid rgba(212,175,55,0.2);
+    }
+
+    .total {
+      color: var(--gold);
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(212,175,55,0.3);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-clear, .btn-checkout {
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+    }
+
+    .btn-clear { 
+      background: linear-gradient(135deg, #b9322b, #8a1f1f);
+      color: white;
+      box-shadow: 0 4px 12px rgba(185,50,43,0.3);
+    }
+
+    .btn-checkout { 
+      background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+      color: black;
+      box-shadow: 0 4px 12px rgba(212,175,55,0.4);
+    }
+
+    .btn-clear:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(185,50,43,0.5);
+    }
+
+    .btn-checkout:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.6);
+    }
+
+    .btn-checkout:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    main { padding-bottom: 50vh; }
+
+    .empty-order {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--gold);
+      padding: 40px;
+    }
+
+    @media(max-width: 640px) {
+      .cafe-title { font-size: 2rem; }
+      .items-grid { grid-template-columns: repeat(2, 1fr); }
+      .total { font-size: 1.2rem; }
+      .action-buttons { flex-wrap: wrap; }
+      .btn-clear, .btn-checkout { flex: 1; min-width: 120px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <div class="hero" style="position: relative;">
+  <div style="position: absolute; top: 16px; right: 16px; z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+    <a href="admin.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
+      🧾 Manage Menu
+    </a>
+    <a href="orders.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
+      ☕ Queue
+    </a>
+  </div>
+
+  <div class="logo-container">
+    <img src="logo.jpg" alt="Solaria Logo" class="logo">
+  </div>
+
+  <h1 class="cafe-title">SOLARIA</h1>
+  <p class="cafe-subtitle">Kitchen & Cafe</p>
+</div>
+
+
+  <div class="container">
+    <main id="menu-container">
+      <div class="loading">Loading menu...</div>
+    </main>
+  </div>
+
+  <!-- Fixed Order Bar -->
+  <div id="order-bar">
+    <div class="order-header">
+      <span class="order-title">YOUR ORDER</span>
+      <span class="order-count"><span id="item-count">0</span> items</span>
+    </div>
+    <div id="order-list">
+      <div class="empty-order">Your cart is empty</div>
+    </div>
+    <div class="bottom-controls">
+      <div class="total">₱<span id="total">0.00</span></div>
+      <div class="action-buttons">
+        <button id="clear" class="btn-clear">Clear</button>
+        <button id="checkout" class="btn-checkout">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrs4JJXOSehaQc6pLSiKw8Z2PkPLRey5eWQPEUNSqDojHSSoE1y1AxZCZwdos-HHol/exec";
+    let order = {};
+
+    // Load menu from sheet
+    async function loadMenu() {
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getMenu`);
+        const menu = await res.json();
+        console.log("Menu loaded:", menu);
+        buildMenuUI(menu);
+      } catch (err) {
+        console.error("Failed to load menu", err);
+        document.getElementById('menu-container').innerHTML = 
+          '<div style="text-align:center;color:#ef4444;padding:40px">Failed to load menu. Please check your connection.</div>';
+      }
+    }
+
+    function buildMenuUI(menuRows) {
+      if (!menuRows || menuRows.length === 0) {
+        document.getElementById('menu-container').innerHTML = 
+          '<div style="text-align:center;color:#666;padding:40px">No menu items available at the moment.</div>';
+        return;
+      }
+
+      // Group by Category, then Subgroup
+      const grouped = {};
+      
+      menuRows.forEach(r => {
+        const cat = r.Category || "Uncategorized";
+        const subgroup = r.Subgroup || "Other";
+        
+        if (!grouped[cat]) grouped[cat] = {};
+        if (!grouped[cat][subgroup]) grouped[cat][subgroup] = [];
+        
+        grouped[cat][subgroup].push(r);
+      });
+
+      const container = document.getElementById('menu-container');
+      container.innerHTML = "";
+
+      Object.entries(grouped).forEach(([cat, subgroups]) => {
+        const sec = document.createElement('section');
+        sec.className = 'menu-section';
+        
+        const header = document.createElement('div');
+        header.className = 'menu-header';
+        header.innerHTML = `<span>${cat}</span><span class="menu-icon" id="icon-${escapeId(cat)}">▼</span>`;
+        sec.appendChild(header);
+
+        const content = document.createElement('div');
+        content.className = 'menu-content';
+        content.style.display = 'none';
+        
+        Object.entries(subgroups).forEach(([subgroup, items]) => {
+          const subDiv = document.createElement('div');
+          subDiv.className = 'menu-subgroup';
+          subDiv.innerHTML = `<h3 class="subgroup-title">${subgroup}</h3>`;
+          
+          const grid = document.createElement('div');
+          grid.className = 'items-grid';
+          
+          items.forEach((it, idx) => {
+            const card = document.createElement('div');
+            card.className = 'menu-item';
+            const itemName = it['Item Name'] || '';
+            const size = it.Size || '';
+            const price = Number(it.Price || 0);
+            const uniqueId = `item_${escapeId(cat)}_${escapeId(subgroup)}_${idx}`;
+            
+            card.innerHTML = `
+              <h4>${itemName}</h4>
+              <div style="color:#bbb;font-size:0.85rem;margin-bottom:8px">${size}</div>
+              <div style="color:var(--gold);font-weight:800;margin-bottom:8px">₱${price.toFixed(2)}</div>
+              <input id="qty_${uniqueId}" type="number" min="1" value="1">
+              <button id="btn_${uniqueId}" class="btn-add">Add to Order</button>
+            `;
+            grid.appendChild(card);
+            
+            // Add event listener after element exists
+            setTimeout(() => {
+              const btn = document.getElementById(`btn_${uniqueId}`);
+              if (btn) {
+                btn.addEventListener('click', () => {
+                  addToOrderFromMenu(cat, subgroup, itemName, size, price, uniqueId);
+                });
+              }
+            }, 0);
+          });
+          
+          subDiv.appendChild(grid);
+          content.appendChild(subDiv);
+        });
+
+        header.addEventListener('click', () => {
+          const visible = content.style.display === 'block';
+          content.style.display = visible ? 'none' : 'block';
+          const icon = document.getElementById(`icon-${escapeId(cat)}`);
+          icon.textContent = visible ? '▼' : '▲';
+          icon.style.transform = visible ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+        
+        sec.appendChild(content);
+        container.appendChild(sec);
+      });
+    }
+
+    function escapeId(s){ 
+      return String(s||'').replace(/[^a-z0-9]/gi,'_'); 
+    }
+
+    function addToOrderFromMenu(category, subgroup, itemName, size, price, uniqueId) {
+      const id = `${category}__${subgroup}__${itemName}__${size}`;
+      const qtyEl = document.getElementById(`qty_${uniqueId}`);
+      const qty = parseInt(qtyEl.value) || 1;
+      
+      const displayName = size ? `${itemName} (${size})` : itemName;
+      
+      if (!order[id]) {
+        order[id] = { name: displayName, size: size, price: Number(price), qty: qty };
+      } else {
+        order[id].qty += qty;
+      }
+      
+      renderOrder();
+    }
+
+    function renderOrder() {
+      const orderListEl = document.getElementById('order-list');
+      const totalEl = document.getElementById('total');
+      const itemCountEl = document.getElementById('item-count');
+      
+      orderListEl.innerHTML = '';
+      let total = 0;
+      let itemCount = 0;
+      
+      const items = Object.entries(order);
+      
+      if (items.length === 0) {
+        orderListEl.innerHTML = '<div class="empty-order">Your cart is empty</div>';
+      } else {
+        items.forEach(([key, item]) => {
+          total += item.price * item.qty;
+          itemCount += item.qty;
+          const div = document.createElement('div');
+          div.className = 'order-item';
+          div.innerHTML = `
+            <div class="order-item-info">
+              <div class="order-item-name">${item.name}</div>
+              <div class="order-item-price">₱${item.price.toFixed(2)} each</div>
+            </div>
+            <div class="order-item-controls">
+              <input type="number" min="1" value="${item.qty}" onchange="updateQty('${key.replace(/'/g, "\\'")}', this.value)">
+              <button class="btn-remove" onclick="removeItem('${key.replace(/'/g, "\\'")}')">✕</button>
+            </div>
+          `;
+          orderListEl.appendChild(div);
+        });
+      }
+      
+      totalEl.textContent = total.toFixed(2);
+      itemCountEl.textContent = itemCount;
+    }
+
+    window.updateQty = (key, val) => {
+      const qty = parseInt(val);
+      if (qty <= 0) delete order[key];
+      else order[key].qty = qty;
+      renderOrder();
+    };
+
+    window.removeItem = (key) => {
+      delete order[key];
+      renderOrder();
+    };
+
+    document.getElementById('clear').onclick = () => { 
+      if (Object.keys(order).length > 0) {
+        if (confirm("Clear all items from your order?")) {
+          order = {}; 
+          renderOrder(); 
+        }
+      }
+    };
+
+    // Checkout
+        const checkoutBtn = document.getElementById('checkout');
+        checkoutBtn.onclick = async () => {
+        if (Object.keys(order).length === 0) {
+            alert("🛒 Your cart is empty! Please add items first.");
+            return;
+        }
+
+        // Disable button while processing
+        checkoutBtn.disabled = true;
+        const originalText = checkoutBtn.textContent;
+        checkoutBtn.textContent = "Processing...";
+
+        // Collect all items
+        const items = Object.values(order).map(it => ({
+            name: it.name,
+            size: it.size || "",
+            qty: it.qty,
+            price: it.price
+        }));
+
+        // Create a new order object
+        const newOrder = {
+            id: Date.now(),
+            items,
+            timestamp: new Date().toLocaleString()
+        };
+
+        // Retrieve existing queued orders
+        const existing = JSON.parse(localStorage.getItem("pendingOrders") || "[]");
+
+        // Add new one to queue
+        existing.push(newOrder);
+        localStorage.setItem("pendingOrders", JSON.stringify(existing));
+
+        // Reset cart
+        alert("✅ Order added to queue!");
+        order = {};
+        renderOrder();
+
+        // Restore button
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = originalText;
+        };
+
+
+    // Initial render and load
+    renderOrder();
+    loadMenu();
+  </script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Solaria Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+      --gold: #d4af37;
+      --gold-strong: #c79e2d;
+      --gold-light: #f4e4b0;
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1410 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* Hero Section with Logo */
+    .hero {
+      background: linear-gradient(180deg, rgba(212,175,55,0.08) 0%, transparent 100%);
+      padding: 24px 18px 32px;
+      text-align: center;
+      border-bottom: 2px solid rgba(212,175,55,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .logo-container {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      border-radius: 50%;
+      box-shadow: 0 8px 32px rgba(212,175,55,0.3);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cafe-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 12px 0 8px;
+      text-shadow: 0 2px 12px rgba(212,175,55,0.4);
+      letter-spacing: 2px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cafe-subtitle {
+      color: var(--gold-light);
+      font-size: 0.9rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Card Styles */
+    .card {
+      background: linear-gradient(145deg, rgba(26,26,26,0.9), rgba(20,20,20,0.9));
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .card-header {
+      color: var(--gold);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(212,175,55,0.2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Form Inputs */
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(212,175,55,0.3);
+      background: rgba(10,10,10,0.6);
+      color: white;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(10,10,10,0.9);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.1);
+    }
+
+    input::placeholder {
+      color: #666;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+      color: #0b0b0b;
+      box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.5);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: white;
+      box-shadow: 0 4px 12px rgba(56,189,248,0.3);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56,189,248,0.5);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(239,68,68,0.5);
+    }
+
+    .btn-clear {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+      color: white;
+      box-shadow: 0 4px 12px rgba(107,114,128,0.3);
+    }
+
+    .btn-clear:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(107,114,128,0.5);
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow: auto;
+      max-height: 50vh;
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,0.15);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+      color: #0b0b0b;
+      padding: 14px;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.85rem;
+    }
+
+    td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.9rem;
+    }
+
+    tr {
+      transition: all 0.3s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(212,175,55,0.08);
+      cursor: pointer;
+    }
+
+    tbody tr.selected {
+      background: rgba(212,175,55,0.15);
+      border-left: 3px solid var(--gold);
+    }
+
+    /* Grid Layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--gold);
+    }
+
+    /* Scrollbar */
+    .table-container::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 10px;
+    }
+
+    @media(max-width: 768px) {
+      .cafe-title { font-size: 1.8rem; }
+      .card { padding: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .button-group { flex-direction: column; }
+      .btn { width: 100%; }
+      
+      table { font-size: 0.85rem; }
+      th, td { padding: 10px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <div class="hero" style="position: relative;">
+  <div style="position: absolute; top: 16px; right: 16px; z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+    <a href="index.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
+      🧾 Order Menu
+    </a>
+    <a href="orders.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
+      ☕ Queue
+    </a>
+  </div>
+
+  <div class="logo-container">
+    <img src="logo.jpg" alt="Solaria Logo" class="logo">
+  </div>
+
+  <h1 class="cafe-title">SOLARIA</h1>
+  <p class="cafe-subtitle">Kitchen & Cafe</p>
+</div>
+
+
+  <div class="container">
+    <!-- Add Menu Item Card -->
+    <div class="card">
+      <h2 class="card-header">➕ Add New Menu Item</h2>
+      <div class="form-grid">
+        <input id="cCategory" placeholder="Category (e.g., Beverages)" />
+        <input id="cSubgroup" placeholder="Subgroup (e.g., Espresso Based)" />
+        <input id="cItemID" placeholder="Item ID (e.g., spanish_12)" />
+        <input id="cItemName" placeholder="Item Name" />
+        <input id="cSize" placeholder="Size (e.g., 12oz)" />
+        <input id="cPrice" placeholder="Price" type="number" step="0.01" />
+      </div>
+      <button onclick="addMenu()" class="btn btn-primary" style="width:100%">Add Item to Menu</button>
+    </div>
+
+    <!-- Current Menu Table Card -->
+    <div class="card">
+      <h2 class="card-header">📋 Current Menu Items</h2>
+      <p style="color:#aaa;font-size:0.9rem;margin-bottom:16px">Click on any row to select and edit</p>
+      <div class="table-container">
+        <table id="menuTableWrapper">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Subgroup</th>
+              <th>Item ID</th>
+              <th>Item Name</th>
+              <th>Size</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="menuTable">
+            <tr><td colspan="7" class="loading">Loading menu...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Update/Delete Section Card -->
+    <div class="card">
+      <h2 class="card-header">✏️ Update / Delete Selected Item</h2>
+      <div class="form-grid">
+        <input id="uCategory" placeholder="Category" />
+        <input id="uSubgroup" placeholder="Subgroup" />
+        <input id="uItemID" placeholder="Item ID" />
+        <input id="uItemName" placeholder="Item Name" />
+        <input id="uSize" placeholder="Size" />
+        <input id="uPrice" placeholder="Price" type="number" step="0.01" />
+      </div>
+      <div class="button-group">
+        <button onclick="updateMenu()" class="btn btn-secondary" style="flex:1">Update Item</button>
+        <button onclick="deleteMenu()" class="btn btn-danger" style="flex:1">Delete Item</button>
+        <button onclick="clearUpdateFields()" class="btn btn-clear">Clear Selection</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrs4JJXOSehaQc6pLSiKw8Z2PkPLRey5eWQPEUNSqDojHSSoE1y1AxZCZwdos-HHol/exec";
+    let selectedRowIndex = null;
+
+    async function loadMenu() {
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getMenu`);
+        const data = await res.json();
+        console.log("Menu data:", data);
+        
+        const tbody = document.getElementById('menuTable');
+        
+        if (!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No menu items found. Add your first item above!</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = data.map((row, idx) => {
+          const category = row.Category || '';
+          const subgroup = row.Subgroup || '';
+          const itemID = row['Item ID'] || '';
+          const itemName = row['Item Name'] || '';
+          const size = row.Size || '';
+          const price = row.Price || 0;
+          
+          return `
+            <tr onclick="selectRow(${idx})" id="row-${idx}">
+              <td>${category}</td>
+              <td>${subgroup}</td>
+              <td>${itemID}</td>
+              <td>${itemName}</td>
+              <td>${size}</td>
+              <td style="color:var(--gold);font-weight:600">₱${Number(price).toFixed(2)}</td>
+              <td>
+                <button onclick="event.stopPropagation(); quickDelete(${idx})" 
+                   class="btn btn-danger" style="padding:8px 16px;font-size:0.85rem">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+        
+        window.menuData = data;
+      } catch (err) {
+        console.error("Error loading menu:", err);
+        document.getElementById('menuTable').innerHTML = 
+          '<tr><td colspan="7" class="empty-state" style="color:#ef4444">Error loading menu. Please check your connection.</td></tr>';
+      }
+    }
+
+    function selectRow(idx) {
+      // Remove previous selection
+      if (selectedRowIndex !== null) {
+        const prevRow = document.getElementById(`row-${selectedRowIndex}`);
+        if (prevRow) prevRow.classList.remove('selected');
+      }
+      
+      // Add new selection
+      selectedRowIndex = idx;
+      const row = document.getElementById(`row-${idx}`);
+      if (row) row.classList.add('selected');
+      
+      populateUpdate(idx);
+    }
+
+    function populateUpdate(idx) {
+      const row = window.menuData[idx];
+      if (!row) return;
+      
+      document.getElementById('uCategory').value = row.Category || '';
+      document.getElementById('uSubgroup').value = row.Subgroup || '';
+      document.getElementById('uItemID').value = row['Item ID'] || '';
+      document.getElementById('uItemName').value = row['Item Name'] || '';
+      document.getElementById('uSize').value = row.Size || '';
+      document.getElementById('uPrice').value = row.Price || '';
+      
+      // Scroll to update section
+      document.querySelector('.card:last-of-type').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function clearUpdateFields() {
+      document.getElementById('uCategory').value = '';
+      document.getElementById('uSubgroup').value = '';
+      document.getElementById('uItemID').value = '';
+      document.getElementById('uItemName').value = '';
+      document.getElementById('uSize').value = '';
+      document.getElementById('uPrice').value = '';
+      
+      // Remove selection highlight
+      if (selectedRowIndex !== null) {
+        const row = document.getElementById(`row-${selectedRowIndex}`);
+        if (row) row.classList.remove('selected');
+        selectedRowIndex = null;
+      }
+    }
+
+    async function addMenu() {
+      const payload = {
+        action: "addMenu",
+        Category: document.getElementById('cCategory').value.trim(),
+        Subgroup: document.getElementById('cSubgroup').value.trim(),
+        "Item ID": document.getElementById('cItemID').value.trim(),
+        "Item Name": document.getElementById('cItemName').value.trim(),
+        Size: document.getElementById('cSize').value.trim(),
+        Price: document.getElementById('cPrice').value.trim()
+      };
+      
+      // Debug: Log what we're sending
+      console.log('Sending payload:', payload);
+      
+      if (!payload["Item Name"] || !payload.Price) {
+        alert('❌ Item Name and Price are required!');
+        return;
+      }
+      
+      try {
+        await fetch(SCRIPT_URL, { 
+          method: "POST", 
+          mode: "no-cors", 
+          headers: {"Content-Type": "application/json"}, 
+          body: JSON.stringify(payload) 
+        });
+        
+        // Wait a moment for the sheet to update
+        setTimeout(() => {
+          alert('✅ Item added successfully! Check the sheet to verify.');
+          
+          // Clear add form
+          document.getElementById('cCategory').value = '';
+          document.getElementById('cSubgroup').value = '';
+          document.getElementById('cItemID').value = '';
+          document.getElementById('cItemName').value = '';
+          document.getElementById('cSize').value = '';
+          document.getElementById('cPrice').value = '';
+          
+          loadMenu();
+        }, 1000);
+      } catch (err) {
+        alert('❌ Error adding item');
+        console.error(err);
+      }
+    }
+
+    async function updateMenu() {
+      const payload = {
+        action: "updateMenu",
+        Category: document.getElementById('uCategory').value,
+        Subgroup: document.getElementById('uSubgroup').value,
+        "Item ID": document.getElementById('uItemID').value,
+        "Item Name": document.getElementById('uItemName').value,
+        Size: document.getElementById('uSize').value,
+        Price: document.getElementById('uPrice').value
+      };
+      
+      if (!payload["Item Name"]) {
+        alert('❌ Item Name is required!');
+        return;
+      }
+      
+      try {
+        await fetch(SCRIPT_URL, { 
+          method: "POST", 
+          mode: "no-cors", 
+          headers: {"Content-Type": "application/json"}, 
+          body: JSON.stringify(payload) 
+        });
+        alert('✅ Item updated successfully!');
+        clearUpdateFields();
+        loadMenu();
+      } catch (err) {
+        alert('❌ Error updating item');
+        console.error(err);
+      }
+    }
+
+    async function deleteMenu() {
+      const itemName = document.getElementById('uItemName').value;
+      
+      if (!itemName) {
+        alert('❌ Please select an item to delete!');
+        return;
+      }
+      
+      if (!confirm(`Are you sure you want to delete "${itemName}"?`)) {
+        return;
+      }
+      
+      const payload = {
+        action: "deleteMenu",
+        Category: document.getElementById('uCategory').value,
+        Subgroup: document.getElementById('uSubgroup').value,
+        "Item ID": document.getElementById('uItemID').value,
+        "Item Name": itemName,
+        Size: document.getElementById('uSize').value
+      };
+      
+      try {
+        await fetch(SCRIPT_URL, { 
+          method: "POST", 
+          mode: "no-cors", 
+          headers: {"Content-Type": "application/json"}, 
+          body: JSON.stringify(payload) 
+        });
+        alert('✅ Item deleted successfully!');
+        clearUpdateFields();
+        loadMenu();
+      } catch (err) {
+        alert('❌ Error deleting item');
+        console.error(err);
+      }
+    }
+
+    async function quickDelete(idx) {
+      const row = window.menuData[idx];
+      if (!row) return;
+      
+      if (!confirm(`Delete "${row['Item Name']}"?`)) {
+        return;
+      }
+      
+      const payload = {
+        action: "deleteMenu",
+        Category: row.Category,
+        Subgroup: row.Subgroup,
+        "Item ID": row['Item ID'],
+        "Item Name": row['Item Name'],
+        Size: row.Size
+      };
+      
+      try {
+        await fetch(SCRIPT_URL, { 
+          method: "POST", 
+          mode: "no-cors", 
+          headers: {"Content-Type": "application/json"}, 
+          body: JSON.stringify(payload) 
+        });
+        alert('✅ Item deleted!');
+        loadMenu();
+      } catch (err) {
+        alert('❌ Error deleting item');
+        console.error(err);
+      }
+    }
+
+    // Initial load
+    loadMenu();
+  </script>
+</body>
+</html>
