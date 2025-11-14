@@ -127,6 +127,7 @@
       transition: all 0.3s ease;
       border-bottom: 1px solid rgba(212,175,55,0.1);
     }
+   
 
     .menu-header:hover {
       background: linear-gradient(90deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
@@ -385,11 +386,63 @@
 
     .bottom-controls {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       gap: 12px;
       padding-top: 12px;
       border-top: 2px solid rgba(212,175,55,0.2);
+    }
+
+    .payment-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .payment-input {
+      flex: 1;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .payment-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(0,0,0,0.8);
+    }
+
+    .payment-input::placeholder {
+      color: #666;
+    }
+
+    .change-display {
+      flex: 1;
+      padding: 10px 12px;
+      background: rgba(212,175,55,0.1);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 700;
+      color: var(--gold);
+      font-size: 1rem;
+    }
+
+    .change-display.negative {
+      color: #ef4444;
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+    }
+
+    .totals-and-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
 
     .total {
@@ -444,6 +497,11 @@
       transform: none;
     }
 
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.5);
+    }
+
     main { padding-bottom: 50vh; }
 
     .empty-order {
@@ -465,29 +523,52 @@
       .total { font-size: 1.2rem; }
       .action-buttons { flex-wrap: wrap; }
       .btn-clear, .btn-checkout { flex: 1; min-width: 120px; }
+      
+      .nav-button { 
+        padding: 8px 12px !important; 
+        font-size: 0.75rem !important;
+        top: 12px !important;
+        right: 12px !important;
+      }
+      
+      .payment-row {
+        flex-direction: column;
+      }
+      
+      .totals-and-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .total {
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      
+      .action-buttons {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <!-- Hero Section -->
-  <div class="hero" style="position: relative;">
+  <div class="hero">
   <div style="position: absolute; top: 16px; right: 16px; z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
-    <a href="admin.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
-      🧾 Manage Menu
+    <a href="index.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
+        🧾 Order Menu
     </a>
     <a href="orders.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
-      ☕ Queue
+        ☕ Queue
     </a>
   </div>
 
   <div class="logo-container">
     <img src="logo.jpg" alt="Solaria Logo" class="logo">
   </div>
-
-  <h1 class="cafe-title">SOLARIA</h1>
-  <p class="cafe-subtitle">Kitchen & Cafe</p>
-</div>
-
+    <h1 class="cafe-title">SOLARIA</h1>
+    <p class="cafe-subtitle">Kitchen & Cafe</p>
+  </div>
 
   <div class="container">
     <main id="menu-container">
@@ -505,10 +586,24 @@
       <div class="empty-order">Your cart is empty</div>
     </div>
     <div class="bottom-controls">
-      <div class="total">₱<span id="total">0.00</span></div>
-      <div class="action-buttons">
-        <button id="clear" class="btn-clear">Clear</button>
-        <button id="checkout" class="btn-checkout">Checkout</button>
+      <div class="payment-row">
+        <input 
+          type="number" 
+          id="payment-amount" 
+          class="payment-input" 
+          placeholder="Payment Amount (₱)"
+          step="0.01"
+          min="0"
+          oninput="calculateChange()"
+        />
+        <div class="change-display" id="change-display">Change: ₱0.00</div>
+      </div>
+      <div class="totals-and-actions">
+        <div class="total">Total: ₱<span id="total">0.00</span></div>
+        <div class="action-buttons">
+          <button id="clear" class="btn-clear">Clear</button>
+          <button id="checkout" class="btn-checkout">Checkout</button>
+        </div>
       </div>
     </div>
   </div>
@@ -689,60 +784,81 @@
       renderOrder();
     };
 
+    // Calculate change
+    function calculateChange() {
+      const totalEl = document.getElementById('total');
+      const paymentInput = document.getElementById('payment-amount');
+      const changeDisplay = document.getElementById('change-display');
+      
+      const total = parseFloat(totalEl.textContent) || 0;
+      const payment = parseFloat(paymentInput.value) || 0;
+      const change = payment - total;
+      
+      if (payment === 0) {
+        changeDisplay.textContent = 'Change: ₱0.00';
+        changeDisplay.classList.remove('negative');
+      } else if (change < 0) {
+        changeDisplay.textContent = `Short: ₱${Math.abs(change).toFixed(2)}`;
+        changeDisplay.classList.add('negative');
+      } else {
+        changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
+        changeDisplay.classList.remove('negative');
+      }
+    }
+
     document.getElementById('clear').onclick = () => { 
       if (Object.keys(order).length > 0) {
         if (confirm("Clear all items from your order?")) {
           order = {}; 
-          renderOrder(); 
+          renderOrder();
+          document.getElementById('payment-amount').value = '';
+          calculateChange();
         }
       }
     };
 
     // Checkout
-        const checkoutBtn = document.getElementById('checkout');
-        checkoutBtn.onclick = async () => {
-        if (Object.keys(order).length === 0) {
-            alert("🛒 Your cart is empty! Please add items first.");
-            return;
-        }
+    const checkoutBtn = document.getElementById('checkout');
+    checkoutBtn.onclick = async () => {
+      if (Object.keys(order).length === 0) {
+        alert("🛒 Your cart is empty! Please add items first.");
+        return;
+      }
 
-        // Disable button while processing
-        checkoutBtn.disabled = true;
-        const originalText = checkoutBtn.textContent;
-        checkoutBtn.textContent = "Processing...";
+      checkoutBtn.disabled = true;
+      const originalText = checkoutBtn.textContent;
+      checkoutBtn.textContent = "Processing...";
 
-        // Collect all items
-        const items = Object.values(order).map(it => ({
-            name: it.name,
-            size: it.size || "",
-            qty: it.qty,
-            price: it.price
-        }));
+      const items = Object.values(order).map(it => ({
+        name: it.name,
+        size: it.size || "",
+        qty: it.qty,
+        price: it.price
+      }));
 
-        // Create a new order object
-        const newOrder = {
-            id: Date.now(),
-            items,
-            timestamp: new Date().toLocaleString()
-        };
+      const payload = { action: "saveOrder", items };
 
-        // Retrieve existing queued orders
-        const existing = JSON.parse(localStorage.getItem("pendingOrders") || "[]");
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
-        // Add new one to queue
-        existing.push(newOrder);
-        localStorage.setItem("pendingOrders", JSON.stringify(existing));
-
-        // Reset cart
-        alert("✅ Order added to queue!");
+        alert("✅ Order placed successfully! Thank you!");
         order = {};
         renderOrder();
+        document.getElementById('payment-amount').value = '';
+        calculateChange();
+      } catch (err) {
+        alert("❌ Failed to place order. Please try again.");
+        console.error(err);
+      }
 
-        // Restore button
-        checkoutBtn.disabled = false;
-        checkoutBtn.textContent = originalText;
-        };
-
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = originalText;
+    };
 
     // Initial render and load
     renderOrder();
