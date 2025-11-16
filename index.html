@@ -96,6 +96,36 @@
       z-index: 2;
     }
 
+    .nav-buttons {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .nav-button {
+      background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+      color: #0b0b0b;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.5);
+    }
+
     .container { 
       max-width: 1200px; 
       margin: 0 auto; 
@@ -127,7 +157,6 @@
       transition: all 0.3s ease;
       border-bottom: 1px solid rgba(212,175,55,0.1);
     }
-   
 
     .menu-header:hover {
       background: linear-gradient(90deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
@@ -497,11 +526,6 @@
       transform: none;
     }
 
-    .nav-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(212,175,55,0.5);
-    }
-
     main { padding-bottom: 50vh; }
 
     .empty-order {
@@ -524,11 +548,14 @@
       .action-buttons { flex-wrap: wrap; }
       .btn-clear, .btn-checkout { flex: 1; min-width: 120px; }
       
+      .nav-buttons {
+        top: 12px;
+        right: 12px;
+      }
+
       .nav-button { 
-        padding: 8px 12px !important; 
-        font-size: 0.75rem !important;
-        top: 12px !important;
-        right: 12px !important;
+        padding: 8px 12px;
+        font-size: 0.75rem;
       }
       
       .payment-row {
@@ -554,18 +581,14 @@
 <body>
   <!-- Hero Section -->
   <div class="hero">
-  <div style="position: absolute; top: 16px; right: 16px; z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
-    <a href="index.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
-        🧾 Order Menu
-    </a>
-    <a href="orders.html" class="nav-button" style="background: linear-gradient(135deg, var(--gold), var(--gold-strong)); color: #0b0b0b; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(212,175,55,0.3); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;">
-        ☕ Queue
-    </a>
-  </div>
-
-  <div class="logo-container">
-    <img src="logo.jpg" alt="Solaria Logo" class="logo">
-  </div>
+    <div class="nav-buttons">
+      <a href="admin.html" class="nav-button">⚙️ Admin</a>
+      <a href="orders.html" class="nav-button">📋 Orders Queue</a>
+      <a href="sales_report2.html" class="nav-button">📊 Sales Report</a>
+    </div>
+    <div class="logo-container">
+      <img src="logo.jpg" alt="Solaria Logo" class="logo">
+    </div>
     <h1 class="cafe-title">SOLARIA</h1>
     <p class="cafe-subtitle">Kitchen & Cafe</p>
   </div>
@@ -609,7 +632,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrs4JJXOSehaQc6pLSiKw8Z2PkPLRey5eWQPEUNSqDojHSSoE1y1AxZCZwdos-HHol/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJQUz3b1TkQN7MNvfZpD5LQNhjTcmx4UUNLs6u0UjMXIJuIU2NM1EgsEit4pDZWapi/exec";
     let order = {};
 
     // Load menu from sheet
@@ -817,7 +840,7 @@
       }
     };
 
-    // Checkout
+    // Checkout - Add to orders queue (localStorage)
     const checkoutBtn = document.getElementById('checkout');
     checkoutBtn.onclick = async () => {
       if (Object.keys(order).length === 0) {
@@ -829,24 +852,37 @@
       const originalText = checkoutBtn.textContent;
       checkoutBtn.textContent = "Processing...";
 
-      const items = Object.values(order).map(it => ({
+      const items =  Object.values(order).map(it => ({
         name: it.name,
         size: it.size || "",
         qty: it.qty,
         price: it.price
       }));
 
-      const payload = { action: "saveOrder", items };
+      // Create order object for queue
+      const newOrder = {
+        id: Date.now(),
+        timestamp: new Date().toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        items: items
+      };
 
       try {
-        await fetch(SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
+        // Get existing pending orders from localStorage
+        const pendingOrders = JSON.parse(localStorage.getItem("pendingOrders") || "[]");
+        
+        // Add new order to queue
+        pendingOrders.push(newOrder);
+        
+        // Save to localStorage
+        localStorage.setItem("pendingOrders", JSON.stringify(pendingOrders));
 
-        alert("✅ Order placed successfully! Thank you!");
+        alert("✅ Order sent to queue! Please proceed to the counter.");
         order = {};
         renderOrder();
         document.getElementById('payment-amount').value = '';
